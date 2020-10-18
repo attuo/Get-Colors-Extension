@@ -1,0 +1,19 @@
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-piece {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.count-part {
+
+}
+
+.code-part {
+
+}
+
