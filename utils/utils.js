@@ -34,7 +34,7 @@ function colorToHex(color) {
   hex = [0,1,2].map(
       function(idx) { return byteToHex(rgba[idx]); }
       ).join('');
-  return "#"+hex;
+  return "#" + hex.toUpperCase();;
 }
 
 const groupBy = (arrayOfStrings) => {
