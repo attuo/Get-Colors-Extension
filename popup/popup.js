@@ -24,7 +24,7 @@ const findColors = (cssContent) => {
 
 
 const removeChildren = (parent) => {
-  while (parent.firstChild) {
+  while (parent && parent.firstChild) {
     parent.firstChild.remove();
   }
 }
@@ -48,21 +48,21 @@ const createColor = (colorCode, count) => {
   return mainDiv;
 }
 
-const contentDiv = document.getElementById("content");
 
-const createColors = (colors) => {
+
+const createColors = (div, colors) => {
   colors.forEach(element => {
-    contentDiv.appendChild(createColor(element.name, element.count));
+    div.appendChild(createColor(element.name, element.count));
   });
 }
 
 
 const start = async () => {
+  const contentDiv = document.getElementById("content");
   removeChildren(contentDiv);
   let content = await startScrape();
   let colors = findColors(content.css);
-  createColors(colors);
+  createColors(contentDiv, colors);
 }
-
 
 start();
