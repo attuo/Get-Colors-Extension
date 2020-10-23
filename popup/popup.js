@@ -1,5 +1,4 @@
 // 'use strict';
-const regex = /(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig;
 
 const startScrape = async () => {
   // Get the active tab
@@ -16,10 +15,22 @@ const startScrape = async () => {
 
 
 const findColors = (cssContent) => {
+  let regex = /(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig;
   const matches = [...cssContent.match(regex)];
   let grouped = groupBy(matches);
   grouped.sort(compare);
   return grouped;
+}
+
+const findBothColors = (cssContent) => {
+  console.log("CSS KONTENTTI: ", cssContent);
+  let colorRegex = /(?<!-)(color:)( ?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
+  const textColorMatches = [...cssContent.match(colorRegex)];
+  let bgRegex = /background-color:([ ]?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
+  const bgColorMatches = [...cssContent.match(bgRegex)];
+
+  console.log("Tekstit: ", textColorMatches);
+  console.log("BG: ", bgColorMatches);
 }
 
 
@@ -48,8 +59,6 @@ const createColor = (colorCode, count) => {
   return mainDiv;
 }
 
-
-
 const createColors = (div, colors) => {
   colors.forEach(element => {
     div.appendChild(createColor(element.name, element.count));
@@ -58,10 +67,11 @@ const createColors = (div, colors) => {
 
 
 const start = async () => {
-  const contentDiv = document.getElementById("content");
+  const contentDiv = document.getElementById("content1");
   removeChildren(contentDiv);
   let content = await startScrape();
   let colors = findColors(content.css);
+  let bothColors = findBothColors(content.css);
   createColors(contentDiv, colors);
 }
 
