@@ -2,62 +2,55 @@ const trim = (str) => {
   return str.replace(/^\s+|\s+$/gm,'');
 }
 
-function colorToRGBA(color) {
-  // Returns the color as an array of [r, g, b, a] -- all range from 0 - 255
-  // color must be a valid canvas fillStyle. This will cover most anything
-  // you'd want to use.
-  // Examples:
-  // colorToRGBA('red')  # [255, 0, 0, 255]
-  // colorToRGBA('#f00') # [255, 0, 0, 255]
-  var cvs, ctx;
-  cvs = document.createElement('canvas');
-  cvs.height = 1;
-  cvs.width = 1;
-  ctx = cvs.getContext('2d');
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, 1, 1);
-  return ctx.getImageData(0, 0, 1, 1).data;
-}
-
-function byteToHex(num) {
-  // Turns a number (0-255) into a 2-character hex number (00-ff)
-  return ('0'+num.toString(16)).slice(-2);
-}
-
-function colorToHex(color) {
-  // Convert any CSS color to a hex representation
-  // Examples:
-  // colorToHex('red')            # '#ff0000'
-  // colorToHex('rgb(255, 0, 0)') # '#ff0000'
-  var rgba, hex;
-  rgba = colorToRGBA(color);
-  hex = [0,1,2].map(
-      function(idx) { return byteToHex(rgba[idx]); }
-      ).join('');
-  return "#" + hex.toUpperCase();;
+function standardizeColor(str) {
+  var ctx = document.createElement('canvas').getContext('2d');
+  ctx.fillStyle = str;
+  return ctx.fillStyle.toUpperCase();
 }
 
 const groupBy = (arrayOfStrings) => {
-  // Iterate the input list and construct a grouping via a "reducer"
-  let output = arrayOfStrings.reduce(function (grouping, item) {
-    // If the current list item does not yet exist in grouping, set 
-    // it's initial count to 1
-    if (grouping[item] === undefined) {
-      grouping[item] = 1;
+  let result = [];
+  arrayOfStrings.forEach(element => {
+    let array = element.split(':');
+    let object = {
+      type: array[0].trim(),
+      color: standardizeColor(array[1].trim()),
+      count: 1
     }
-    // If current list item does exist in grouping, increment the 
-    // count
-    else {
-      grouping[item]++;
+    let isDuplicate = false;
+    let resultIndex = null;
+    result.forEach((colorObject, index) => {
+      if (colorObject.type === object.type && colorObject.color === object.color) {
+        isDuplicate = true;
+        resultIndex = index;
+      }
+    });
+    if (isDuplicate) {
+      result[resultIndex].count++;
+    } else {
+      result.push(object);
     }
-    return grouping;
-  }, {})
-
-  let countsExtended = Object.keys(output).map(k => {
-    let hexValue = colorToHex(k);
-    return {name: hexValue, count: output[k]}; 
   });
-  return countsExtended;
+  return result;
+}
+
+const groupByType = (arrayOfColors) => {
+	let dict = {};
+  arrayOfColors.forEach(color => {
+  	let found = dict[color.type];
+    if (!found) dict[color.type] = [{ color: color.color, count: color.count }];
+    else dict[color.type].push ({ color: color.color, count: color.count });
+  });
+  return dict;
+}
+
+
+const findColors = (cssContent) => {
+  let regex = /(background-color|color):(\s?)((?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\))/ig;
+  const matches = [...cssContent.match(regex)];
+  let grouped = groupBy(matches);
+  grouped.sort(compare);
+  return grouped;
 }
 
 

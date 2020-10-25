@@ -14,17 +14,9 @@ const startScrape = async () => {
 }
 
 
-const findColors = (cssContent) => {
-  let regex = /(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig;
-  const matches = [...cssContent.match(regex)];
-  let grouped = groupBy(matches);
-  grouped.sort(compare);
-  return grouped;
-}
-
 const findBothColors = (cssContent) => {
   console.log("CSS KONTENTTI: ", cssContent);
-  let colorRegex = /(?<!-)(color:)( ?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
+  let colorRegex = /color:([ ]?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
   const textColorMatches = [...cssContent.match(colorRegex)];
   let bgRegex = /background-color:([ ]?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
   const bgColorMatches = [...cssContent.match(bgRegex)];
@@ -61,18 +53,46 @@ const createColor = (colorCode, count) => {
 
 const createColors = (div, colors) => {
   colors.forEach(element => {
-    div.appendChild(createColor(element.name, element.count));
+    div.appendChild(createColor(element.color, element.count));
   });
+}
+
+const createTypeColors = (div, colors) => {
+  let bgColorDiv = document.createElement("div");
+  let bgColorTitle = document.createElement("h4");
+  bgColorTitle.textContent = "Background colors";
+  bgColorDiv.appendChild(bgColorTitle);
+  let colorDiv = document.createElement("div");
+  let colorTitle = document.createElement("h4");
+  colorTitle.textContent = "Text colors";
+  colorDiv.appendChild(colorTitle);
+
+  colors.forEach(element => {
+    console.log("ELEMENTTI ", element);
+    if (element.type == "background-color") {
+      console.log("Käy bg")
+      bgColorDiv.append(createColor(element.color, element.count));
+    }
+    if (element.type == "color") {
+      console.log("Käy color")
+      colorDiv.append(createColor(element.color, element.count));
+    }
+  });
+  div.appendChild(bgColorDiv);
+  div.appendChild(colorDiv);
 }
 
 
 const start = async () => {
-  const contentDiv = document.getElementById("content1");
-  removeChildren(contentDiv);
+  const content1Div = document.getElementById("content1");
+  const content2Div = document.getElementById("content2");
+  removeChildren(content1Div);
+  removeChildren(content2Div);
   let content = await startScrape();
   let colors = findColors(content.css);
-  let bothColors = findBothColors(content.css);
-  createColors(contentDiv, colors);
+  //let bothColors = findBothColors(content.css);
+  createColors(content1Div, colors);
+  createTypeColors(content2Div, colors);
 }
 
 start();
