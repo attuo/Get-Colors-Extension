@@ -1,11 +1,14 @@
+'use strict';
+
 const trim = (str) => {
   return str.replace(/^\s+|\s+$/gm,'');
 }
 
 function standardizeColor(str) {
-  var ctx = document.createElement('canvas').getContext('2d');
+  let ctx = document.createElement('canvas').getContext('2d');
   ctx.fillStyle = str;
-  return ctx.fillStyle.toUpperCase();
+  let color = ctx.fillStyle.toUpperCase();
+  return color;
 }
 
 const groupBy = (arrayOfStrings) => {
@@ -34,20 +37,11 @@ const groupBy = (arrayOfStrings) => {
   return result;
 }
 
-const groupByType = (arrayOfColors) => {
-	let dict = {};
-  arrayOfColors.forEach(color => {
-  	let found = dict[color.type];
-    if (!found) dict[color.type] = [{ color: color.color, count: color.count }];
-    else dict[color.type].push ({ color: color.color, count: color.count });
-  });
-  return dict;
-}
-
 
 const findColors = (cssContent) => {
-  let regex = /(background-color|color):(\s?)((?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\))/ig;
+  let regex = /([^(\s|;)]*color[s?]*:)(\s?)((?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\))/ig;
   const matches = [...cssContent.match(regex)];
+  console.log("Matches: ", matches);
   let grouped = groupBy(matches);
   grouped.sort(compare);
   return grouped;

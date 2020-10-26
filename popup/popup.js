@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 const startScrape = async () => {
   // Get the active tab
@@ -12,19 +12,6 @@ const startScrape = async () => {
   });
   return scraped[0];
 }
-
-
-const findBothColors = (cssContent) => {
-  console.log("CSS KONTENTTI: ", cssContent);
-  let colorRegex = /color:([ ]?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
-  const textColorMatches = [...cssContent.match(colorRegex)];
-  let bgRegex = /background-color:([ ]?)(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\)/ig
-  const bgColorMatches = [...cssContent.match(bgRegex)];
-
-  console.log("Tekstit: ", textColorMatches);
-  console.log("BG: ", bgColorMatches);
-}
-
 
 const removeChildren = (parent) => {
   while (parent && parent.firstChild) {
@@ -51,12 +38,6 @@ const createColor = (colorCode, count) => {
   return mainDiv;
 }
 
-const createColors = (div, colors) => {
-  colors.forEach(element => {
-    div.appendChild(createColor(element.color, element.count));
-  });
-}
-
 const createTypeColors = (div, colors) => {
   let bgColorDiv = document.createElement("div");
   let bgColorTitle = document.createElement("h4");
@@ -66,33 +47,36 @@ const createTypeColors = (div, colors) => {
   let colorTitle = document.createElement("h4");
   colorTitle.textContent = "Text colors";
   colorDiv.appendChild(colorTitle);
+  let otherColorDiv = document.createElement("div");
+  let otherColorTitle = document.createElement("h4");
+  otherColorTitle.textContent = "Other colors";
+  otherColorDiv.appendChild(otherColorTitle);
 
   colors.forEach(element => {
-    console.log("ELEMENTTI ", element);
-    if (element.type == "background-color") {
-      console.log("Käy bg")
-      bgColorDiv.append(createColor(element.color, element.count));
-    }
-    if (element.type == "color") {
-      console.log("Käy color")
-      colorDiv.append(createColor(element.color, element.count));
+    switch(element.type) {
+      case "background-color":
+        bgColorDiv.append(createColor(element.color, element.count));
+        break;
+      case "color":
+        colorDiv.append(createColor(element.color, element.count));
+        break;
+      default: 
+      otherColorDiv.append(createColor(element.color, element.count));
     }
   });
   div.appendChild(bgColorDiv);
   div.appendChild(colorDiv);
+  div.appendChild(otherColorDiv);
 }
 
 
 const start = async () => {
-  const content1Div = document.getElementById("content1");
-  const content2Div = document.getElementById("content2");
-  removeChildren(content1Div);
-  removeChildren(content2Div);
+  const contentDiv = document.getElementById("content");
+  removeChildren(contentDiv);
   let content = await startScrape();
   let colors = findColors(content.css);
   //let bothColors = findBothColors(content.css);
-  createColors(content1Div, colors);
-  createTypeColors(content2Div, colors);
+  createTypeColors(contentDiv, colors);
 }
 
 start();
