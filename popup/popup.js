@@ -38,19 +38,18 @@ const createColor = (colorCode, count) => {
   return mainDiv;
 }
 
-const createTypeColors = (div, colors) => {
-  let bgColorDiv = document.createElement("div");
-  let bgColorTitle = document.createElement("h4");
-  bgColorTitle.textContent = "Background colors";
-  bgColorDiv.appendChild(bgColorTitle);
+const createColorDiv = (title) => {
   let colorDiv = document.createElement("div");
   let colorTitle = document.createElement("h4");
-  colorTitle.textContent = "Text colors";
+  colorTitle.textContent = title;
   colorDiv.appendChild(colorTitle);
-  let otherColorDiv = document.createElement("div");
-  let otherColorTitle = document.createElement("h4");
-  otherColorTitle.textContent = "Other colors";
-  otherColorDiv.appendChild(otherColorTitle);
+  return colorDiv;
+}
+
+const createAllTabContent = (div, colors) => {
+  let bgColorDiv = createColorDiv("Background colors");
+  let textColorDiv = createColorDiv("Text colors");
+  let otherColorDiv = createColorDiv("Other colors");
 
   colors.forEach(element => {
     switch(element.type) {
@@ -58,25 +57,67 @@ const createTypeColors = (div, colors) => {
         bgColorDiv.append(createColor(element.color, element.count));
         break;
       case "color":
-        colorDiv.append(createColor(element.color, element.count));
+        textColorDiv.append(createColor(element.color, element.count));
         break;
       default: 
-      otherColorDiv.append(createColor(element.color, element.count));
+        otherColorDiv.append(createColor(element.color, element.count));
+        break;
     }
   });
   div.appendChild(bgColorDiv);
-  div.appendChild(colorDiv);
+  div.appendChild(textColorDiv);
+  div.appendChild(otherColorDiv);
+}
+
+const createBackgroundTabContent = (div, colors) => {
+  let bgColorDiv = createColorDiv("Background colors");
+  colors.forEach(element => {
+    if(element.type == "background-color") {
+      bgColorDiv.append(createColor(element.color, element.count));
+    }
+  })
+  div.appendChild(bgColorDiv);
+}
+
+const createTextTabContent = (div, colors) => {
+  let textColorDiv = createColorDiv("Text colors");
+  colors.forEach(element => {
+    if(element.type == "color") {
+      textColorDiv.append(createColor(element.color, element.count));
+    }
+  })
+  div.appendChild(textColorDiv);
+}
+
+const createOtherTabContent = (div, colors) => {
+  let otherColorDiv = createColorDiv("Other colors");
+  colors.forEach(element => {
+    if(element.type !== "background-color" && element.type !== "color") {
+      otherColorDiv.append(createColor(element.color, element.count));
+    }
+  })
   div.appendChild(otherColorDiv);
 }
 
 
 const start = async () => {
-  const contentDiv = document.getElementById("content");
-  removeChildren(contentDiv);
+  const allContentDiv = document.getElementById("all");
+  const bgContentDiv = document.getElementById("background");
+  const textContentDiv = document.getElementById("text");
+  const otherContentDiv = document.getElementById("other");
+  
+  removeChildren(allContentDiv);
+  removeChildren(bgContentDiv);
+  removeChildren(textContentDiv);
+  removeChildren(otherContentDiv);
+
   let content = await startScrape();
   let colors = findColors(content.css);
-  //let bothColors = findBothColors(content.css);
-  createTypeColors(contentDiv, colors);
+  
+  createAllTabContent(allContentDiv, colors);
+  createBackgroundTabContent(bgContentDiv, colors);
+  createTextTabContent(textContentDiv, colors);
+  createOtherTabContent(otherContentDiv, colors);
 }
 
 start();

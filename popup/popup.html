@@ -8,13 +8,40 @@
 
 <body>
   <div class="container">
+    <!-- Tabs -->
+    <ul id="nav-tab" class="nav">
+      <li class="active"><a href="#all-tab">All</a></li>
+      <li><a href="#background-tab">Background</a></li>
+      <li><a href="#text-tab">Text</a></li>
+      <li><a href="#other-tab">Other</a></li>
+    </ul>
+
+    <!-- Tab panes -->
     <div class="tab-content">
-      <div id="grouped">
-        <div id="content"></div>
+
+      <div class="tab-pane active" id="all-tab">
+        <div id="all"></div>
       </div>
+
+      <div class="tab-pane" id="background-tab">
+        <div id="background"></div>
+      </div>
+
+      <div class="tab-pane" id="text-tab">
+        <div id="text"></div>
+      </div>
+
+      <div class="tab-pane" id="other-tab">
+        <div id="other"></div>
+      </div>
+
     </div>
-    <script src="/utils/utils.js"></script>
-    <script src="popup.js"></script>
+
+  </div>
+
+  <script src="/utils/tabs.js"></script>
+  <script src="/utils/utils.js"></script>
+  <script src="popup.js"></script>
 </body>
 
 </html>
