@@ -1,13 +1,30 @@
-const onTabClick = (event) => {
-  let activeTabs = document.querySelectorAll('.active');
-  
-  activeTabs.forEach(function(tab) {
-    tab.className = tab.className.replace('active', '');
+const tabs = document.querySelectorAll(".tabs > .tab");
+const panels = document.querySelectorAll(".panels > .panel");
+
+const deActivateElements = () => {
+  tabs.forEach(navTab => {
+    navTab.classList.remove("active");
   });
   
-  event.target.parentElement.className += ' active';
-  document.getElementById(event.target.href.split('#')[1]).className += ' active';
+  panels.forEach(panel => {
+    panel.classList.remove("active");
+  })
 }
 
-const element = document.getElementById('nav-tab');
-element.addEventListener('click', onTabClick, false);
+const activateElements = (tabEvent) => {
+  tabEvent.target.classList.add('active');
+  let panelId = tabEvent.target.getAttribute('data-target');
+  document.getElementById(panelId).classList.add("active");
+}
+
+// 
+const onTabClick = (tabEvent) => {
+  deActivateElements();
+  activateElements(tabEvent);
+}
+
+// Add click listeners
+tabs.forEach(navTab => {
+  navTab.addEventListener('click', onTabClick, false);
+});
+

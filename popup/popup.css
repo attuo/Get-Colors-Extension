@@ -20,41 +20,37 @@
 
 }
 
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-ul li {
-  display: -webkit-inline-box;
-  display: inline-flex;
-}
-ul li a {
-  text-decoration: none;
-  color: darkgray;
-  padding: 10px;
-  -webkit-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
-  border-bottom: 1px solid transparent;
-}
-ul li a:hover {
-  color: gray;
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 2px 40px 2px;
+  height: 40px;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.nav .active a {
-  color: slateblue;
-  border-bottom: 1px solid slateblue;
+.tabs>* {
+  width: 100%;
+  color: dimgray;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.nav .active a:hover {
-  border-color: transparent;
-  background: slateblue;
+
+.tabs>*:hover:not(.active) {
+  background-color: rgb(220, 220, 220);
+}
+
+.tabs>.active {
   color: white;
+  background-color: #4CAF50;
 }
 
-.tab-pane {
+.panel {
   display: none;
 }
 
-.tab-pane.active {
-  display: flex;
+.panel.active {
+  display: block;
 }

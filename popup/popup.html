@@ -9,29 +9,29 @@
 <body>
   <div class="container">
     <!-- Tabs -->
-    <ul id="nav-tab" class="nav">
-      <li class="active"><a href="#all-tab">All</a></li>
-      <li><a href="#background-tab">Background</a></li>
-      <li><a href="#text-tab">Text</a></li>
-      <li><a href="#other-tab">Other</a></li>
-    </ul>
+    <nav class="tabs" id="tabs">
+      <div class="tab active" data-target="all-tab">All</div>
+      <div class="tab" data-target="background-tab">Background</div>
+      <div class="tab" data-target="text-tab">Text</div>
+      <div class="tab" data-target="other-tab">Other</div>
+    </nav>
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <div class="panels" id="panels">
 
-      <div class="tab-pane active" id="all-tab">
+      <div class="panel active" id="all-tab">
         <div id="all"></div>
       </div>
 
-      <div class="tab-pane" id="background-tab">
+      <div class="panel" id="background-tab">
         <div id="background"></div>
       </div>
 
-      <div class="tab-pane" id="text-tab">
+      <div class="panel" id="text-tab">
         <div id="text"></div>
       </div>
 
-      <div class="tab-pane" id="other-tab">
+      <div class="panel" id="other-tab">
         <div id="other"></div>
       </div>
 
