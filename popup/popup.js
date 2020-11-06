@@ -72,6 +72,20 @@ const createGroupedContents = (colors, bgDiv, textDiv, otherDiv) => {
   });
 }
 
+const handlePossibleError = (content) => {
+  const containerDiv = document.getElementById("normal-content");
+  const errorDiv = document.getElementById("error-content");
+
+  if (!content) {
+    containerDiv.classList.add("hidden");
+    errorDiv.classList.remove("hidden");
+    return true;
+  } else {
+    containerDiv.classList.remove("hidden");
+    errorDiv.classList.add("hidden");
+    return false;
+  }
+}
 
 const start = async () => {
   const allContentDiv = document.getElementById("all-colors");
@@ -85,8 +99,11 @@ const start = async () => {
   removeChildren(otherContentDiv);
 
   let content = await startScrape();
+  if (handlePossibleError(content)) {
+    return;
+  };
+
   let colors = findColors(content.css);
-  
   createAllContent(colors, allContentDiv);
   createGroupedContents(colors, bgContentDiv, textContentDiv, otherContentDiv);
 
