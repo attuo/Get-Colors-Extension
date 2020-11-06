@@ -3,18 +3,18 @@ const panels = document.querySelectorAll(".panels > .panel");
 
 const deActivateElements = () => {
   tabs.forEach(navTab => {
-    navTab.classList.remove("active");
+    navTab.classList.remove("tab-active");
   });
   
   panels.forEach(panel => {
-    panel.classList.remove("active");
+    panel.classList.remove("panel-active");
   })
 }
 
 const activateElements = (tabEvent) => {
-  tabEvent.target.classList.add('active');
+  tabEvent.target.classList.add('tab-active');
   let panelId = tabEvent.target.getAttribute('data-target');
-  document.getElementById(panelId).classList.add("active");
+  document.getElementById(panelId).classList.add("panel-active");
 }
 
 // 

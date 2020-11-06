@@ -101,10 +101,10 @@ const createOtherTabContent = (div, colors) => {
 
 
 const start = async () => {
-  const allContentDiv = document.getElementById("all");
-  const bgContentDiv = document.getElementById("background");
-  const textContentDiv = document.getElementById("text");
-  const otherContentDiv = document.getElementById("other");
+  const allContentDiv = document.getElementById("all-tab");
+  const bgContentDiv = document.getElementById("background-tab");
+  const textContentDiv = document.getElementById("text-tab");
+  const otherContentDiv = document.getElementById("other-tab");
   
   removeChildren(allContentDiv);
   removeChildren(bgContentDiv);
