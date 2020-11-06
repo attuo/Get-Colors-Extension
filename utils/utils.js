@@ -17,13 +17,13 @@ const groupBy = (arrayOfStrings) => {
     let array = element.split(':');
     let object = {
       type: array[0].trim(),
-      color: standardizeColor(array[1].trim()),
+      colorCode: standardizeColor(array[1].trim()),
       count: 1
     }
     let isDuplicate = false;
     let resultIndex = null;
     result.forEach((colorObject, index) => {
-      if (colorObject.type === object.type && colorObject.color === object.color) {
+      if (colorObject.type === object.type && colorObject.colorCode === object.colorCode) {
         isDuplicate = true;
         resultIndex = index;
       }
@@ -41,10 +41,28 @@ const groupBy = (arrayOfStrings) => {
 const findColors = (cssContent) => {
   let regex = /([^(\s|;)]*color[s?]*:)(\s?)((?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\))/ig;
   const matches = [...cssContent.match(regex)];
-  console.log("Matches: ", matches);
   let grouped = groupBy(matches);
   grouped.sort(compare);
   return grouped;
+}
+
+const mergeColors = (colorsGrouped) => {
+  let colorsMerged = [];
+  
+  colorsGrouped.forEach(colorGrouped => {
+    let isNew = true;
+    colorsMerged.forEach(colorMerged => {
+      if (colorMerged.colorCode === colorGrouped.colorCode) {
+        colorMerged.count += colorGrouped.count;
+        isNew = false;
+      }
+    });
+   if (isNew) {
+    colorsMerged.push( { colorCode: colorGrouped.colorCode, count: colorGrouped.count, type: "all" } )
+   }
+  });
+
+  return colorsMerged;
 }
 
 

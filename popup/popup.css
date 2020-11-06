@@ -23,12 +23,33 @@ body {
   flex-direction: column;
 }
 
+.panel-header {
+  display: flex;
+  /* background-color: #ccc; */
+  justify-content: center;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.panel-content {
+  /* background-color: #ccc; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* padding: 10px; */
+  border-radius: 5px;
+}
+
 .color-piece {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 30px;
-  
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 3px;
+  border: 1px solid #ccc;
 }
 
 
