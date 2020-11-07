@@ -24,13 +24,16 @@ const createColor = (color) => {
   let mainDiv = document.createElement("div");
   mainDiv.className ="color-piece";
   mainDiv.style.background = color.colorCode;
+  mainDiv.title = "Click to copy to clipboard";
   
   let countDiv = document.createElement("div");
-  countDiv.className = "count-part";
+  countDiv.className = "pill";
+  countDiv.title = "Count of elements the color is used";
   countDiv.textContent = color.count;
 
   let colorCodeDiv = document.createElement("div");
-  colorCodeDiv.className = "code-part";
+  colorCodeDiv.className = "pill";
+  colorCodeDiv.title = "Color code";
   colorCodeDiv.textContent = color.colorCode;
 
   mainDiv.appendChild(countDiv);
