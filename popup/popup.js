@@ -25,6 +25,9 @@ const createColor = (color) => {
   mainDiv.className ="color-piece";
   mainDiv.style.background = color.colorCode;
   mainDiv.title = "Click to copy to clipboard";
+  mainDiv.addEventListener('click', (result) => {
+    copyOnClick(result);
+});
   
   let countDiv = document.createElement("div");
   countDiv.className = "pill";
@@ -90,6 +93,46 @@ const handlePossibleError = (content) => {
   }
 }
 
+const createExportButtons = () => {
+  let headerDivs = document.getElementsByClassName("panel-header");
+
+  for (const headerDiv of headerDivs) {
+    let exportButton = document.createElement("button");
+    exportButton.textContent = "E"
+    exportButton.addEventListener('click', (result) => {
+      copyAllOnClick(result);
+    });
+    console.log(headerDiv);
+    headerDiv.appendChild(exportButton);
+}
+}
+
+const copyOnClick = (node) => {
+  let colorCodeElement = node.target.childNodes[1];
+  let text = colorCodeElement.firstChild.textContent;
+
+  if (!navigator.clipboard) {
+    // fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
+
+const copyAllOnClick = (node) => {
+  console.log("NODE: ", node);
+  let activeDiv = document.getElementsByClassName("panel-active")[0];
+  console.log(activeDiv);
+  let contentDiv = activeDiv.children[1];
+  console.log(contentDiv);
+
+}
+
+
+
 const start = async () => {
   const allContentDiv = document.getElementById("all-colors");
   const bgContentDiv = document.getElementById("background-colors");
@@ -109,6 +152,7 @@ const start = async () => {
   let colors = findColors(content.css);
   createAllContent(colors, allContentDiv);
   createGroupedContents(colors, bgContentDiv, textContentDiv, otherContentDiv);
+  createExportButtons();
 
 }
 

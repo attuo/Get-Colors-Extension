@@ -1,17 +1,17 @@
 :root {
-  --popup-bg-color: #ccc;
-  --panel-bg-color: #fff;
-  --panel-header-text-color: #50555a;
-  --panel-content-text-color: #50555a;
-  --tab-bg-color: #ccc;
-  --tab-bg-color-hover: #ccc;
-  --tab-bg-color-active: #fff;
-  --tab-bg-color-not-active: #dcdcdc;
-  --tab-text-color: #fff;
-  --tab-text-color-active: #50555a;
-  --border-color: #ccc;
-  --pill-bg-color: #fff;
-  --scrollbar-color: #fff;
+  --popup-bg-color: #495464;
+  --panel-bg-color: #f4f4f2;
+  --panel-header-text-color: #495464;
+  --panel-content-text-color: #495464;
+  --tab-bg-color: #495464;
+  --tab-bg-color-hover: #e8e8e8;
+  --tab-bg-color-active: #f4f4f2;
+  --tab-bg-color-hover-not-active: #e8e8e8;
+  --tab-text-color: #bbbfca;
+  --tab-text-color-active: #495464;
+  --border-color: #bbbfca;
+  --pill-bg-color: #f4f4f2;
+  --scrollbar-color: #f4f4f2;
 }
 
 * {
@@ -45,7 +45,7 @@ body {
 
 .panel-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -71,12 +71,19 @@ body {
   border: 1px solid var(--border-color);
 }
 
+.color-piece:hover .pill {
+  visibility: visible;
+}
+
 .pill {
   background-color: var(--pill-bg-color);
   padding: 3px;
   border-radius: 5px;
   border: 1px solid var(--border-color);
+  visibility: hidden;
 }
+
+
 
 .nav {
   overflow: hidden;
@@ -107,7 +114,7 @@ body {
 }
 
 .tab:hover:not(.tab-active) {
-  background-color: var(--tab-bg-color-not-active);
+  background-color: var(--tab-bg-color-hover-not-active);
 }
 
 .tab-active {
