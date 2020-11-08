@@ -36,15 +36,30 @@ const createColor = (color) => {
 
   let colorCodeDiv = document.createElement("div");
   colorCodeDiv.className = "pill";
+  colorCodeDiv.classList.add("tooltip");
   colorCodeDiv.title = "Color code";
   colorCodeDiv.textContent = color.colorCode;
+
+  let toolTipSpan = document.createElement("span");
+  toolTipSpan.className = "tooltiptext";
+  toolTipSpan.classList.add("tooltip-left")
+  toolTipSpan.textContent = "Copy to clipboard";
+  colorCodeDiv.appendChild(toolTipSpan);
+  colorCodeDiv.addEventListener('mouseout', (node) => {
+    resetTooltip(node);
+  });
 
   mainDiv.appendChild(countDiv);
   mainDiv.appendChild(colorCodeDiv);
 
+  
+
   return mainDiv;
 }
 
+const resetTooltip = (node) => {
+  node.target.lastChild.textContent = "Copy to clipboard";
+}
 
 const createPanelContent = (colors, typeName) => {
   let panelContentDiv = document.createElement("div");
@@ -108,29 +123,30 @@ const createExportButtons = () => {
 }
 
 const copyOnClick = (node) => {
-  let colorCodeElement = node.target.childNodes[1];
-  let text = colorCodeElement.firstChild.textContent;
+  console.log("copyOnClick -> node", node);
+
+  let colorCodeElement = node.target.firstChild;
+  let text = colorCodeElement.textContent;
 
   if (!navigator.clipboard) {
-    // fallbackCopyTextToClipboard(text);
     return;
   }
-  navigator.clipboard.writeText(text).then(function() {
+  navigator.clipboard.writeText(text).then(() => {
     console.log('Async: Copying to clipboard was successful!');
-  }, function(err) {
+  }, (err) => {
     console.error('Async: Could not copy text: ', err);
   });
+
+  console.log("NODE: ", node);
+  node.target.lastChild.textContent = "Copied!";
 }
 
 const copyAllOnClick = (node) => {
-  console.log("NODE: ", node);
   let activeDiv = document.getElementsByClassName("panel-active")[0];
-  console.log(activeDiv);
   let contentDiv = activeDiv.children[1];
-  console.log(contentDiv);
+  console.log("Content div: ", contentDiv);
 
 }
-
 
 
 const start = async () => {
