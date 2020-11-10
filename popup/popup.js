@@ -117,7 +117,6 @@ const createExportButtons = () => {
     exportButton.addEventListener('click', (result) => {
       copyAllOnClick(result);
     });
-    console.log(headerDiv);
     headerDiv.appendChild(exportButton);
 }
 }
@@ -136,8 +135,7 @@ const copyOnClick = (node) => {
   }, (err) => {
     console.error('Async: Could not copy text: ', err);
   });
-
-  console.log("NODE: ", node);
+  
   node.target.lastChild.textContent = "Copied!";
 }
 
@@ -145,6 +143,20 @@ const copyAllOnClick = (node) => {
   let activeDiv = document.getElementsByClassName("panel-active")[0];
   let contentDiv = activeDiv.children[1];
   console.log("Content div: ", contentDiv);
+
+  let colorCodes = [];
+  contentDiv.childNodes.forEach(colorDiv => {
+    colorCodes.push(colorDiv.lastChild.firstChild.textContent);
+  });
+
+  if (!navigator.clipboard) {
+    return;
+  }
+  navigator.clipboard.writeText(colorCodes.toString()).then(() => {
+    console.log('Async: Copying to clipboard was successful!');
+  }, (err) => {
+    console.error('Async: Could not copy text: ', err);
+  });
 
 }
 
