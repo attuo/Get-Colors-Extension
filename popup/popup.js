@@ -25,9 +25,6 @@ const createColor = (color) => {
   mainDiv.className ="color-piece";
   mainDiv.style.background = color.colorCode;
   mainDiv.title = "Click to copy to clipboard";
-  mainDiv.addEventListener('click', (result) => {
-    copyOnClick(result);
-});
   
   let countDiv = document.createElement("div");
   countDiv.className = "pill";
@@ -45,6 +42,9 @@ const createColor = (color) => {
   toolTipSpan.classList.add("tooltip-left")
   toolTipSpan.textContent = "Copy to clipboard";
   colorCodeDiv.appendChild(toolTipSpan);
+  colorCodeDiv.addEventListener('click', (result) => {
+    copyOnClick(result);
+  });
   colorCodeDiv.addEventListener('mouseout', (node) => {
     resetTooltip(node);
   });
