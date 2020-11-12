@@ -20,6 +20,20 @@ const removeChildren = (parent) => {
 }
 
 
+const createTooltip = (parentDiv) => {
+  let toolTipSpan = document.createElement("span");
+  toolTipSpan.className = "tooltiptext";
+  toolTipSpan.classList.add("tooltip-left")
+  toolTipSpan.textContent = "Copy to clipboard";
+  
+  parentDiv.classList.add("tooltip");
+  parentDiv.appendChild(toolTipSpan);
+
+  parentDiv.addEventListener('mouseout', () => {
+    resetTooltips();
+  });
+}
+
 const createColor = (color) => {
   let mainDiv = document.createElement("div");
   mainDiv.className ="color-piece";
@@ -36,30 +50,33 @@ const createColor = (color) => {
   colorCodeDiv.classList.add("tooltip");
   colorCodeDiv.title = "Color code";
   colorCodeDiv.textContent = color.colorCode;
-
-  let toolTipSpan = document.createElement("span");
-  toolTipSpan.className = "tooltiptext";
-  toolTipSpan.classList.add("tooltip-left")
-  toolTipSpan.textContent = "Copy to clipboard";
-  colorCodeDiv.appendChild(toolTipSpan);
   colorCodeDiv.addEventListener('click', (result) => {
     copyOnClick(result);
   });
-  colorCodeDiv.addEventListener('mouseout', (node) => {
-    resetTooltip(node);
-  });
+
+  createTooltip(colorCodeDiv);
 
   mainDiv.appendChild(countDiv);
   mainDiv.appendChild(colorCodeDiv);
 
-  
-
   return mainDiv;
 }
 
-const resetTooltip = (node) => {
-  node.target.lastChild.textContent = "Copy to clipboard";
+const resetTooltips = () => {
+  let toolTips = document.querySelectorAll(".tooltiptext");
+  toolTips.forEach(tooltip => {
+    tooltip.textContent = "Click to copy";
+  })
 }
+
+const updateTooltips = () => {
+  let toolTips = document.querySelectorAll(".tooltiptext");
+  toolTips.forEach(tooltip => {
+    tooltip.textContent = "Copied!";
+  })
+}
+
+
 
 const createPanelContent = (colors, typeName) => {
   let panelContentDiv = document.createElement("div");
@@ -108,25 +125,7 @@ const handlePossibleError = (content) => {
   }
 }
 
-const createExportButtons = () => {
-  let headerDivs = document.getElementsByClassName("panel-header");
-
-  for (const headerDiv of headerDivs) {
-    let exportButton = document.createElement("button");
-    exportButton.textContent = "E"
-    exportButton.addEventListener('click', (result) => {
-      copyAllOnClick(result);
-    });
-    headerDiv.appendChild(exportButton);
-}
-}
-
-const copyOnClick = (node) => {
-  console.log("copyOnClick -> node", node);
-
-  let colorCodeElement = node.target.firstChild;
-  let text = colorCodeElement.textContent;
-
+const copyToClipboard = (text) => {
   if (!navigator.clipboard) {
     return;
   }
@@ -135,8 +134,25 @@ const copyOnClick = (node) => {
   }, (err) => {
     console.error('Async: Could not copy text: ', err);
   });
-  
-  node.target.lastChild.textContent = "Copied!";
+}
+
+const createCopyAllListeners = () => {
+  let copyAllButtons = document.querySelectorAll(".copy-all-button");
+  copyAllButtons.forEach(button => {
+    console.log("createCopyAllListeners -> button", button);
+    button.addEventListener('click', (result) => {
+      copyAllOnClick(result);
+    });
+    createTooltip(button);
+  })
+}
+
+const copyOnClick = (node) => {
+  console.log("copyOnClick -> node", node);
+  let colorCodeElement = node.target.firstChild;
+  let text = colorCodeElement.textContent;
+  copyToClipboard(text);
+  updateTooltips();
 }
 
 const copyAllOnClick = (node) => {
@@ -149,15 +165,8 @@ const copyAllOnClick = (node) => {
     colorCodes.push(colorDiv.lastChild.firstChild.textContent);
   });
 
-  if (!navigator.clipboard) {
-    return;
-  }
-  navigator.clipboard.writeText(colorCodes.toString()).then(() => {
-    console.log('Async: Copying to clipboard was successful!');
-  }, (err) => {
-    console.error('Async: Could not copy text: ', err);
-  });
-
+  copyToClipboard(colorCodes.toString());
+  updateTooltips();
 }
 
 
@@ -180,7 +189,7 @@ const start = async () => {
   let colors = findColors(content.css);
   createAllContent(colors, allContentDiv);
   createGroupedContents(colors, bgContentDiv, textContentDiv, otherContentDiv);
-  createExportButtons();
+  createCopyAllListeners();
 
 }
 

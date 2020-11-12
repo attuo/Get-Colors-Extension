@@ -61,7 +61,7 @@ const mergeColors = (colorsGrouped) => {
     colorsMerged.push( { colorCode: colorGrouped.colorCode, count: colorGrouped.count, type: "all" } )
    }
   });
-
+  colorsMerged.sort(compare);
   return colorsMerged;
 }
 

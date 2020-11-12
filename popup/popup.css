@@ -46,6 +46,7 @@ body {
 .panel-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -147,6 +148,14 @@ body {
 
 .tooltip {
   position: relative;
+}
+
+.copy-all-button {
+  display: flex;
+  background-color: transparent;
+  border: none;
+  padding: 3px;
+  cursor: pointer;
 }
 
 .tooltip .tooltiptext {
