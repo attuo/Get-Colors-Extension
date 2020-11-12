@@ -5,97 +5,118 @@ const bgContentDiv = document.getElementById("background-colors");
 const textContentDiv = document.getElementById("text-colors");
 const otherContentDiv = document.getElementById("other-colors");
 
-const getWebsiteColors = async () => {
-  let content = await startScrape();
-  if (!content) { return null; }
-  else {
-    let colors = findColors(content.css);
-    return colors;
-  }
-}
+// <-- Color finding -->
 
 const startScrape = async () => {
-  // Get the active tab
-  const tabs = await browser.tabs.query({
+  const currentActiveTab = (await browser.tabs.query({
     active: true,
     currentWindow: true
-  });
-  const tab = tabs[0];
-  const scraped = await browser.tabs.executeScript(tab.id, {
+  }))[0];
+
+  const scrapedWebsiteContent = (await browser.tabs.executeScript(currentActiveTab.id, {
     file: "/content_scripts/scrape.js"
-  });
-  return scraped[0];
+  }))[0];
+
+  return scrapedWebsiteContent;
 }
 
-const removeChildren = (parent) => {
-  while (parent && parent.firstChild) {
-    parent.firstChild.remove();
+const getWebsiteColors = async () => {
+  let content = await startScrape();
+  if (content && content.css) { 
+    let colors = findColors(content.css);
+    return colors; 
   }
 }
 
-const createTooltip = (parentDiv) => {
-  let toolTipSpan = document.createElement("span");
-  toolTipSpan.className = "tooltiptext";
-  toolTipSpan.classList.add("tooltip-left")
-  toolTipSpan.textContent = "Copy to clipboard";
-  
-  parentDiv.classList.add("tooltip");
-  parentDiv.appendChild(toolTipSpan);
+// <-- Color element -->
 
-  parentDiv.addEventListener('mouseout', () => {
-    resetTooltips();
-  });
-}
-
-const createColor = (color) => {
-  let mainDiv = document.createElement("div");
-  mainDiv.className ="color-piece";
-  mainDiv.style.background = color.colorCode;
-  mainDiv.title = "Click to copy to clipboard";
-  
-  let countDiv = document.createElement("div");
+const createColorCountElement = (colorCount) => {
+  let countDiv = document.createElement("div") 
   countDiv.className = "pill";
   countDiv.title = "Count of elements the color is used";
-  countDiv.textContent = color.count;
+  countDiv.textContent = colorCount;
+  return countDiv;
+}
 
+const createColorCodeElement = (colorCode) => {
   let colorCodeDiv = document.createElement("div");
   colorCodeDiv.className = "pill";
   colorCodeDiv.title = "Color code";
-  colorCodeDiv.textContent = color.colorCode;
+  colorCodeDiv.textContent = colorCode;
   colorCodeDiv.addEventListener('click', (result) => {
-    copyOnClick(result);
+    copyOnClickEvent(result);
   });
-
-  createTooltip(colorCodeDiv);
-
-  mainDiv.appendChild(countDiv);
-  mainDiv.appendChild(colorCodeDiv);
-
-  return mainDiv;
+  return colorCodeDiv;
 }
 
-const resetTooltips = () => {
-  let toolTips = document.querySelectorAll(".tooltiptext");
-  toolTips.forEach(tooltip => {
-    tooltip.textContent = "Click to copy";
-  })
+const createColorElement = (color) => {
+  let colorDiv = document.createElement("div");
+  colorDiv.className ="color-piece";
+  colorDiv.style.background = color.colorCode;
+  colorDiv.title = "Click to copy";
+  
+  let colorCountElement = createColorCountElement(color.count);
+  let colorCodeElement = createColorCodeElement(color.colorCode);
+  createTooltipElement(colorCodeElement);
+
+  colorDiv.appendChild(colorCountElement);
+  colorDiv.appendChild(colorCodeElement);
+
+  return colorDiv;
 }
 
-const updateTooltips = () => {
-  let toolTips = document.querySelectorAll(".tooltiptext");
+// <-- Tooltips --> 
+
+const createTooltipElement = (parentDiv) => {
+  let tooltipSpan = document.createElement("span");
+  tooltipSpan.className = "tooltip";
+  tooltipSpan.classList.add("tooltip-left")
+  tooltipSpan.textContent = "Click to copy";
+  
+  parentDiv.classList.add("tooltippable");
+  parentDiv.appendChild(tooltipSpan);
+  parentDiv.addEventListener('mouseout', () => {
+    resetTooltipElements();
+  });
+}
+
+const updateTooltipElements = () => {
+  let toolTips = document.querySelectorAll(".tooltip");
   toolTips.forEach(tooltip => {
     tooltip.textContent = "Copied!";
   })
 }
 
-const createPanelContent = (colors, typeName) => {
-  let panelContentDiv = document.createElement("div");
-  colors.forEach(color => {
-    if(color.type == typeName) {
-      panelContentDiv.append(createColor(color));
-    }
+const resetTooltipElements = () => {
+  let toolTips = document.querySelectorAll(".tooltip");
+  toolTips.forEach(tooltip => {
+    tooltip.textContent = "Click to copy";
   })
-  return panelContentDiv;
+}
+
+// <-- Tab contents -->
+
+const createAllTabContent = (colorsGrouped) => { 
+  let colorsMerged = mergeColors(colorsGrouped);
+  colorsMerged.forEach(color => {
+    allContentDiv.append(createColorElement(color));
+  });
+  createCopyAllListeners();
+}
+
+const createGroupedTabsContents = (colors) => {
+  colors.forEach(color => {
+    switch(color.type) {
+      case "background-color":
+        bgContentDiv.append(createColorElement(color));
+        break;
+      case "color": 
+        textContentDiv.append(createColorElement(color));
+        break;
+      default:
+        otherContentDiv.append(createColorElement(color));
+    }
+  });
 }
 
 const createErrorContent = () => {
@@ -106,94 +127,68 @@ const createErrorContent = () => {
     errorElement.textContent = "Getting colors from this site is not supported.";
     tab.appendChild(errorElement);
   });
-  
 }
 
-const createAllContent = (colorsGrouped) => { 
-  let colorsMerged = mergeColors(colorsGrouped);
-  colorsMerged.forEach(color => {
-    allContentDiv.append(createColor(color));
-  });
-
-  createCopyAllListeners();
-}
-
-const createGroupedContents = (colors) => {
-  colors.forEach(color => {
-    switch(color.type) {
-      case "background-color":
-        bgContentDiv.append(createColor(color));
-        break;
-      case "color": 
-        textContentDiv.append(createColor(color));
-        break;
-      default:
-        otherContentDiv.append(createColor(color));
-    }
-  });
-}
-
-const copyToClipboard = (text) => {
-  if (!navigator.clipboard) {
-    return;
-  }
-  navigator.clipboard.writeText(text).then(() => {
-    console.log('Async: Copying to clipboard was successful!');
-  }, (err) => {
-    console.error('Async: Could not copy text: ', err);
-  });
-}
+// <-- Copy colors to clipboard -->
 
 const createCopyAllListeners = () => {
   let copyAllButtons = document.querySelectorAll(".copy-all-button");
   copyAllButtons.forEach(button => {
     button.addEventListener('click', (result) => {
-      copyAllOnClick(result);
+      copyAllOnClickEvent(result);
     });
-    createTooltip(button);
-  })
+    createTooltipElement(button);
+  });
 }
 
-const copyOnClick = (node) => {
+const copyAllOnClickEvent = () => {
+  let colorPillDivs = document.querySelectorAll(".panel-active > .panel-content > .color-piece > .tooltippable");
+  let colorCodes = [];
+  colorPillDivs.forEach(colorPill => {
+    colorCodes.push(colorPill.firstChild.textContent);
+  });
+  copyToClipboard(colorCodes.toString());
+  updateTooltipElements();
+}
+
+const copyOnClickEvent = (node) => {
   let colorCodeElement = node.target.firstChild;
   let text = colorCodeElement.textContent;
   copyToClipboard(text);
-  updateTooltips();
+  updateTooltipElements();
 }
 
-const copyAllOnClick = () => {
-  let activeDiv = document.getElementsByClassName("panel-active")[0];
-  let contentDiv = activeDiv.children[1];
+// <-- Element clearing -->
 
-  let colorCodes = [];
-  contentDiv.childNodes.forEach(colorDiv => {
-    colorCodes.push(colorDiv.lastChild.firstChild.textContent);
-  });
-
-  copyToClipboard(colorCodes.toString());
-  updateTooltips();
+const removeChildrenElements = (elements) => {
+  elements.forEach(element => {
+    while (element && element.firstChild) {
+      element.firstChild.remove();
+    }
+  })
 }
 
 const clearPreviousContents = () => {
-  removeChildren(allContentDiv);
-  removeChildren(bgContentDiv);
-  removeChildren(textContentDiv);
-  removeChildren(otherContentDiv);
+  removeChildrenElements([allContentDiv, bgContentDiv, textContentDiv, otherContentDiv]);
 }
+
+// <-- Creating tab contents -->
 
 const createContents = (colors) => {
   if (colors) {
-    createAllContent(colors);
-    createGroupedContents(colors);
+    createAllTabContent(colors);
+    createGroupedTabsContents(colors);
   } else {
     createErrorContent();
   }  
 }
 
-const start = async () => {
+// <-- Initialize -->
+
+const initializePopup = async () => {
   clearPreviousContents();
   let colors = await getWebsiteColors();
   createContents(colors);
 }
 
-start();
+initializePopup();

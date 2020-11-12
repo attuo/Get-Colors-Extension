@@ -1,11 +1,11 @@
 const tabs = document.querySelectorAll(".tabs > .tab");
 const panels = document.querySelectorAll(".panels > .panel");
 
+// 
 const deActivateElements = () => {
   tabs.forEach(navTab => {
     navTab.classList.remove("tab-active");
   });
-  
   panels.forEach(panel => {
     panel.classList.remove("panel-active");
   })
@@ -23,8 +23,11 @@ const onTabClick = (tabEvent) => {
   activateElements(tabEvent);
 }
 
-// Add click listeners
-tabs.forEach(navTab => {
-  navTab.addEventListener('click', onTabClick, false);
-});
+//
+const initializeTabs = () => {
+  tabs.forEach(navTab => {
+    navTab.addEventListener('click', onTabClick, false);
+  });
+}
 
+initializeTabs();

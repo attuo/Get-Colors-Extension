@@ -1,17 +1,19 @@
 :root {
   --popup-bg-color: #495464;
-  --panel-bg-color: #f4f4f2;
+  --panel-bg-color: #F4F4F2;
   --panel-header-text-color: #495464;
   --panel-content-text-color: #495464;
   --tab-bg-color: #495464;
-  --tab-bg-color-hover: #e8e8e8;
-  --tab-bg-color-active: #f4f4f2;
-  --tab-bg-color-hover-not-active: #e8e8e8;
-  --tab-text-color: #bbbfca;
+  --tab-bg-color-hover: #E8E8E8;
+  --tab-bg-color-active: #F4F4F2;
+  --tab-bg-color-hover-not-active: #E8E8E8;
+  --tab-text-color: #BBBFCA;
   --tab-text-color-active: #495464;
   --border-color: #BBBFCA;
-  --pill-bg-color: #f4f4f2;
-  --scrollbar-color: #f4f4f2;
+  --pill-bg-color: #F4F4F2;
+  --tooltip-bg-color: #495464;
+  --tooltip-text-color: #F4F4F2;
+  --scrollbar-color: #F4F4F2;
   --error-color: #AA5042;
 }
 
@@ -27,7 +29,7 @@ body {
   display: flex;
   background-color: var(--popup-bg-color);
 }
- 
+
 
 .container {
   width: 400px;
@@ -102,7 +104,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-	overflow: hidden;
+  overflow: hidden;
   color: var(--tab-text-color);
   transition-duration: .25s;
   border-radius: 5px 5px 0 0;
@@ -132,7 +134,6 @@ body {
   scrollbar-width: thin;
   padding: 10px;
   border-radius: 5px;
-  
 }
 
 .panel-active {
@@ -147,49 +148,48 @@ body {
   color: var(--error-color);
 }
 
-.tooltip {
-  position: relative;
-}
-
 .copy-all-button {
   display: flex;
   background-color: transparent;
   border: none;
   padding: 3px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.tooltip .tooltiptext {
+.tooltippable {
+  position: relative;
+}
+
+.tooltippable .tooltip {
   visibility: hidden;
   position: absolute;
-  width: 140px;
-  background-color: #555;
-  color: #fff;
+  width: 100px;
+  background-color: var(--tooltip-bg-color);
+  color: var(--tooltip-text-color);
   text-align: center;
-  padding: 5px 0;
+  padding: 4px;
   border-radius: 5px;
   z-index: 1;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltippable:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
 
 .tooltip-left {
   top: -2px;
-  bottom:auto;
-  right: 110%;  
+  bottom: auto;
+  right: 110%;
 }
+
 .tooltip-left::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent transparent #555;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
 }
