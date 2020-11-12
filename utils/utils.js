@@ -1,10 +1,16 @@
 'use strict';
 
-const trim = (str) => {
-  return str.replace(/^\s+|\s+$/gm,'');
+const compareColorCounts = (colorA, colorB) => {
+  if (colorA.count > colorB.count) {
+    return -1;
+  }
+  if (colorA.count < colorB.count) {
+    return 1;
+  }
+  return 0;
 }
 
-function standardizeColor(str) {
+const standardizeColor = (str) => {
   let ctx = document.createElement('canvas').getContext('2d');
   ctx.fillStyle = str;
   let color = ctx.fillStyle.toUpperCase();
@@ -42,7 +48,7 @@ const findColors = (cssContent) => {
   let regex = /([^(\s|;)]*color[s?]*:)(\s?)((?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^\)]*\))/ig;
   const matches = [...cssContent.match(regex)];
   let grouped = groupBy(matches);
-  grouped.sort(compare);
+  grouped.sort(compareColorCounts);
   return grouped;
 }
 
@@ -61,17 +67,8 @@ const mergeColors = (colorsGrouped) => {
     colorsMerged.push( { colorCode: colorGrouped.colorCode, count: colorGrouped.count, type: "all" } )
    }
   });
-  colorsMerged.sort(compare);
+  colorsMerged.sort(compareColorCounts);
   return colorsMerged;
 }
 
 
-const compare = (a, b) => {
-  if (a.count > b.count) {
-    return -1;
-  }
-  if (a.count < b.count) {
-    return 1;
-  }
-  return 0;
-}

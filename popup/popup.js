@@ -1,5 +1,19 @@
 'use strict';
 
+const allContentDiv = document.getElementById("all-colors");
+const bgContentDiv = document.getElementById("background-colors");
+const textContentDiv = document.getElementById("text-colors");
+const otherContentDiv = document.getElementById("other-colors");
+
+const getWebsiteColors = async () => {
+  let content = await startScrape();
+  if (!content) { return null; }
+  else {
+    let colors = findColors(content.css);
+    return colors;
+  }
+}
+
 const startScrape = async () => {
   // Get the active tab
   const tabs = await browser.tabs.query({
@@ -18,7 +32,6 @@ const removeChildren = (parent) => {
     parent.firstChild.remove();
   }
 }
-
 
 const createTooltip = (parentDiv) => {
   let toolTipSpan = document.createElement("span");
@@ -47,7 +60,6 @@ const createColor = (color) => {
 
   let colorCodeDiv = document.createElement("div");
   colorCodeDiv.className = "pill";
-  colorCodeDiv.classList.add("tooltip");
   colorCodeDiv.title = "Color code";
   colorCodeDiv.textContent = color.colorCode;
   colorCodeDiv.addEventListener('click', (result) => {
@@ -76,8 +88,6 @@ const updateTooltips = () => {
   })
 }
 
-
-
 const createPanelContent = (colors, typeName) => {
   let panelContentDiv = document.createElement("div");
   colors.forEach(color => {
@@ -88,41 +98,39 @@ const createPanelContent = (colors, typeName) => {
   return panelContentDiv;
 }
 
-const createAllContent = (colorsGrouped, allDiv) => {
-  let colorsMerged = mergeColors(colorsGrouped);
-  colorsMerged.forEach(color => {
-    allDiv.append(createColor(color));
+const createErrorContent = () => {
+  let tabContents = document.querySelectorAll(".panel-content");
+  tabContents.forEach(tab => {
+    let errorElement = document.createElement("span");
+    errorElement.className = "error";
+    errorElement.textContent = "Getting colors from this site is not supported.";
+    tab.appendChild(errorElement);
   });
+  
 }
 
-const createGroupedContents = (colors, bgDiv, textDiv, otherDiv) => {
+const createAllContent = (colorsGrouped) => { 
+  let colorsMerged = mergeColors(colorsGrouped);
+  colorsMerged.forEach(color => {
+    allContentDiv.append(createColor(color));
+  });
+
+  createCopyAllListeners();
+}
+
+const createGroupedContents = (colors) => {
   colors.forEach(color => {
     switch(color.type) {
       case "background-color":
-        bgDiv.append(createColor(color));
+        bgContentDiv.append(createColor(color));
         break;
       case "color": 
-        textDiv.append(createColor(color));
+        textContentDiv.append(createColor(color));
         break;
       default:
-        otherDiv.append(createColor(color));
+        otherContentDiv.append(createColor(color));
     }
   });
-}
-
-const handlePossibleError = (content) => {
-  const containerDiv = document.getElementById("normal-content");
-  const errorDiv = document.getElementById("error-content");
-
-  if (!content) {
-    containerDiv.classList.add("hidden");
-    errorDiv.classList.remove("hidden");
-    return true;
-  } else {
-    containerDiv.classList.remove("hidden");
-    errorDiv.classList.add("hidden");
-    return false;
-  }
 }
 
 const copyToClipboard = (text) => {
@@ -139,7 +147,6 @@ const copyToClipboard = (text) => {
 const createCopyAllListeners = () => {
   let copyAllButtons = document.querySelectorAll(".copy-all-button");
   copyAllButtons.forEach(button => {
-    console.log("createCopyAllListeners -> button", button);
     button.addEventListener('click', (result) => {
       copyAllOnClick(result);
     });
@@ -148,17 +155,15 @@ const createCopyAllListeners = () => {
 }
 
 const copyOnClick = (node) => {
-  console.log("copyOnClick -> node", node);
   let colorCodeElement = node.target.firstChild;
   let text = colorCodeElement.textContent;
   copyToClipboard(text);
   updateTooltips();
 }
 
-const copyAllOnClick = (node) => {
+const copyAllOnClick = () => {
   let activeDiv = document.getElementsByClassName("panel-active")[0];
   let contentDiv = activeDiv.children[1];
-  console.log("Content div: ", contentDiv);
 
   let colorCodes = [];
   contentDiv.childNodes.forEach(colorDiv => {
@@ -169,28 +174,26 @@ const copyAllOnClick = (node) => {
   updateTooltips();
 }
 
-
-const start = async () => {
-  const allContentDiv = document.getElementById("all-colors");
-  const bgContentDiv = document.getElementById("background-colors");
-  const textContentDiv = document.getElementById("text-colors");
-  const otherContentDiv = document.getElementById("other-colors");
-  
+const clearPreviousContents = () => {
   removeChildren(allContentDiv);
   removeChildren(bgContentDiv);
   removeChildren(textContentDiv);
   removeChildren(otherContentDiv);
+}
 
-  let content = await startScrape();
-  if (handlePossibleError(content)) {
-    return;
-  };
+const createContents = (colors) => {
+  if (colors) {
+    createAllContent(colors);
+    createGroupedContents(colors);
+  } else {
+    createErrorContent();
+  }  
+}
 
-  let colors = findColors(content.css);
-  createAllContent(colors, allContentDiv);
-  createGroupedContents(colors, bgContentDiv, textContentDiv, otherContentDiv);
-  createCopyAllListeners();
-
+const start = async () => {
+  clearPreviousContents();
+  let colors = await getWebsiteColors();
+  createContents(colors);
 }
 
 start();

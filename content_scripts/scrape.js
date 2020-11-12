@@ -13,10 +13,10 @@
   .filter(Boolean)
   .join('\n');
 
-  let content = {
+  let websiteContent = {
     html: allHTML,
     css: allCSS
   }
 
-  return content;
+  return websiteContent;
 })();

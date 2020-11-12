@@ -9,9 +9,10 @@
   --tab-bg-color-hover-not-active: #e8e8e8;
   --tab-text-color: #bbbfca;
   --tab-text-color-active: #495464;
-  --border-color: #bbbfca;
+  --border-color: #BBBFCA;
   --pill-bg-color: #f4f4f2;
   --scrollbar-color: #f4f4f2;
+  --error-color: #AA5042;
 }
 
 * {
@@ -22,14 +23,11 @@
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   display: flex;
   background-color: var(--popup-bg-color);
 }
-
-.normal-content {
-  z-index: 1;
-}
+ 
 
 .container {
   width: 400px;
@@ -39,8 +37,7 @@ body {
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
+  z-index: 1;
 }
 
 .panel-header {
@@ -144,6 +141,10 @@ body {
 
 .hidden {
   display: none;
+}
+
+.error {
+  color: var(--error-color);
 }
 
 .tooltip {
