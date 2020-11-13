@@ -105,7 +105,7 @@ const createErrorContent = () => {
   });
 }
 
-// <-- Copy colors to clipboard -->
+// <-- Copy to clipboard events -->
 
 const createCopyAllListeners = () => {
   let copyAllButtons = document.querySelectorAll(".copy-all-button");

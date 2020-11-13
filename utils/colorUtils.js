@@ -91,7 +91,7 @@ const findColors = (cssContent) => {
 }
 
 const getWebsiteColors = async () => {
-  let websiteContent = await getCurrentActiveTabContent();
+  let websiteContent = await getActiveTabContent();
   if (websiteContent && websiteContent.css) { 
     let colors = findColors(websiteContent.css);
     return colors; 
