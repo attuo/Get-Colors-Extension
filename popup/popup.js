@@ -28,7 +28,7 @@ const createColorCodeElement = (colorCode) => {
 
 const createColorElement = (color) => {
   let colorDiv = document.createElement("div");
-  colorDiv.className ="color-piece";
+  colorDiv.className ="color-row";
   colorDiv.style.background = color.colorCode;
   
   let colorCountElement = createColorCountElement(color.count);
@@ -118,7 +118,7 @@ const createCopyAllListeners = () => {
 }
 
 const copyAllOnClickEvent = () => {
-  let colorPillDivs = document.querySelectorAll(".panel-active > .panel-content > .color-piece > .tooltippable");
+  let colorPillDivs = document.querySelectorAll(".panel-active > .panel-content > .color-row > .tooltippable");
   let colorCodes = [];
   colorPillDivs.forEach(colorPill => {
     colorCodes.push(colorPill.firstChild.textContent);

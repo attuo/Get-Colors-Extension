@@ -1,0 +1,37 @@
+
+/* Global variables */
+
+:root {
+  --popup-bg-color: #495464;
+  --panel-bg-color: #F4F4F2;
+  --panel-header-text-color: #495464;
+  --panel-content-text-color: #495464;
+  --tab-bg-color: #495464;
+  --tab-bg-color-hover: #E8E8E8;
+  --tab-bg-color-active: #F4F4F2;
+  --tab-bg-color-hover-not-active: #E8E8E8;
+  --tab-text-color: #BBBFCA;
+  --tab-text-color-active: #495464;
+  --border-color: #BBBFCA;
+  --pill-bg-color: #F4F4F2;
+  --button-bg-color: #E8E8E8;
+  --tooltip-bg-color: #495464;
+  --tooltip-text-color: #F4F4F2;
+  --scrollbar-color: #F4F4F2;
+  --error-color: #AA5042;
+}
+
+/* Resetting */
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-family: inherit;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  background-color: var(--popup-bg-color);
+}

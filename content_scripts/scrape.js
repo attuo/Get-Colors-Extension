@@ -1,4 +1,5 @@
-(function () {
+// Runs on load. Reads and returns the website's html and css 
+(() => {
   const allHTML = document.documentElement.innerHTML;
   const allCSS = [...document.styleSheets]
     .map(styleSheet => {
@@ -17,6 +18,5 @@
     html: allHTML,
     css: allCSS
   }
-
   return websiteContent;
 })();

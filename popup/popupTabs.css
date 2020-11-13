@@ -1,0 +1,31 @@
+.tabs {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: var(--tab-bg-color);
+  height: 43px;
+}
+
+.tab {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: var(--tab-text-color);
+  transition-duration: .25s;
+  border-radius: 5px 5px 0 0;
+  user-select: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tab:hover:not(.tab-active) {
+  background-color: var(--tab-bg-color-hover-not-active);
+}
+
+.tab-active {
+  color: var(--tab-text-color-active);
+  background-color: var(--tab-bg-color-active);
+}
