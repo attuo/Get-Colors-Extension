@@ -5,29 +5,6 @@ const bgContentDiv = document.getElementById("background-colors");
 const textContentDiv = document.getElementById("text-colors");
 const otherContentDiv = document.getElementById("other-colors");
 
-// <-- Color finding -->
-
-const startScrape = async () => {
-  const currentActiveTab = (await browser.tabs.query({
-    active: true,
-    currentWindow: true
-  }))[0];
-
-  const scrapedWebsiteContent = (await browser.tabs.executeScript(currentActiveTab.id, {
-    file: "/content_scripts/scrape.js"
-  }))[0];
-
-  return scrapedWebsiteContent;
-}
-
-const getWebsiteColors = async () => {
-  let content = await startScrape();
-  if (content && content.css) { 
-    let colors = findColors(content.css);
-    return colors; 
-  }
-}
-
 // <-- Color element -->
 
 const createColorCountElement = (colorCount) => {
@@ -53,7 +30,6 @@ const createColorElement = (color) => {
   let colorDiv = document.createElement("div");
   colorDiv.className ="color-piece";
   colorDiv.style.background = color.colorCode;
-  colorDiv.title = "Click to copy";
   
   let colorCountElement = createColorCountElement(color.count);
   let colorCodeElement = createColorCodeElement(color.colorCode);
@@ -71,7 +47,7 @@ const createTooltipElement = (parentDiv) => {
   let tooltipSpan = document.createElement("span");
   tooltipSpan.className = "tooltip";
   tooltipSpan.classList.add("tooltip-left")
-  tooltipSpan.textContent = "Click to copy";
+  tooltipSpan.textContent = "Copy";
   
   parentDiv.classList.add("tooltippable");
   parentDiv.appendChild(tooltipSpan);
@@ -90,15 +66,15 @@ const updateTooltipElements = () => {
 const resetTooltipElements = () => {
   let toolTips = document.querySelectorAll(".tooltip");
   toolTips.forEach(tooltip => {
-    tooltip.textContent = "Click to copy";
+    tooltip.textContent = "Copy";
   })
 }
 
 // <-- Tab contents -->
 
-const createAllTabContent = (colorsGrouped) => { 
-  let colorsMerged = mergeColors(colorsGrouped);
-  colorsMerged.forEach(color => {
+const createAllTabContent = (colorsByType) => { 
+  let colorsByColorCode = joinByColorCode(colorsByType);
+  colorsByColorCode.forEach(color => {
     allContentDiv.append(createColorElement(color));
   });
   createCopyAllListeners();

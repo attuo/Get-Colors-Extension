@@ -11,6 +11,7 @@
   --tab-text-color-active: #495464;
   --border-color: #BBBFCA;
   --pill-bg-color: #F4F4F2;
+  --button-bg-color: #E8E8E8;
   --tooltip-bg-color: #495464;
   --tooltip-text-color: #F4F4F2;
   --scrollbar-color: #F4F4F2;
@@ -30,9 +31,8 @@ body {
   background-color: var(--popup-bg-color);
 }
 
-
 .container {
-  width: 400px;
+  width: 320px;
   display: flex;
   flex-direction: column;
   margin: 10px;
@@ -47,17 +47,19 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   border-radius: 5px;
   color: var(--panel-header-text-color);
 }
 
 .panel-content {
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   border-radius: 5px;
   color: var(--panel-content-text-color);
+  scrollbar-width: thin;
 }
 
 .color-piece {
@@ -81,6 +83,7 @@ body {
   border-radius: 5px;
   border: 1px solid var(--border-color);
   position: relative;
+  user-select: none;
 }
 
 .nav {
@@ -109,6 +112,8 @@ body {
   transition-duration: .25s;
   border-radius: 5px 5px 0 0;
   user-select: none;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .tab:hover:not(.tab-active) {
@@ -127,8 +132,7 @@ body {
 }
 
 .panel {
-  overflow-y: auto;
-  height: 400px;
+  height: 420px;
   border-radius: 5px;
   display: none;
   scrollbar-width: thin;
@@ -137,7 +141,8 @@ body {
 }
 
 .panel-active {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .hidden {
@@ -164,7 +169,7 @@ body {
 .tooltippable .tooltip {
   visibility: hidden;
   position: absolute;
-  width: 100px;
+  width: 60px;
   background-color: var(--tooltip-bg-color);
   color: var(--tooltip-text-color);
   text-align: center;
@@ -183,7 +188,7 @@ body {
 .tooltip-left {
   top: -2px;
   bottom: auto;
-  right: 110%;
+  right: 104%;
 }
 
 .tooltip-left::after {
