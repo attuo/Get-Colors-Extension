@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * Browser extension - Popup window main logic
+ */
+
+/**
+ * Elements from popup HTML 
+ */
 const allContentDiv = document.getElementById("all-colors");
 const bgContentDiv = document.getElementById("background-colors");
 const textContentDiv = document.getElementById("text-colors");
@@ -7,6 +14,9 @@ const otherContentDiv = document.getElementById("other-colors");
 
 // <-- Color element -->
 
+/** 
+ * HTML element for showing color count
+ */
 const createColorCountElement = (colorCount) => {
   let countDiv = document.createElement("div") 
   countDiv.className = "pill";
@@ -15,6 +25,9 @@ const createColorCountElement = (colorCount) => {
   return countDiv;
 }
 
+/** 
+ * HTML element for showing color code
+ */
 const createColorCodeElement = (colorCode) => {
   let colorCodeDiv = document.createElement("div");
   colorCodeDiv.className = "pill";
@@ -26,6 +39,9 @@ const createColorCodeElement = (colorCode) => {
   return colorCodeDiv;
 }
 
+/** 
+ * HTML element for showing the each color and its info
+ */
 const createColorElement = (color) => {
   let colorDiv = document.createElement("div");
   colorDiv.className ="color-row";
@@ -43,6 +59,9 @@ const createColorElement = (color) => {
 
 // <-- Tooltips --> 
 
+/** 
+ * HTML element for showing tooltips
+ */
 const createTooltipElement = (parentDiv) => {
   let tooltipSpan = document.createElement("span");
   tooltipSpan.className = "tooltip";
@@ -52,26 +71,25 @@ const createTooltipElement = (parentDiv) => {
   parentDiv.classList.add("tooltippable");
   parentDiv.appendChild(tooltipSpan);
   parentDiv.addEventListener('mouseout', () => {
-    resetTooltipElements();
+    updateTooltipTexts("Copy");
   });
 }
 
-const updateTooltipElements = () => {
+/** 
+ * Event to update tooltip text
+ */
+const updateTooltipTexts = (text) => {
   let toolTips = document.querySelectorAll(".tooltip");
   toolTips.forEach(tooltip => {
-    tooltip.textContent = "Copied!";
-  })
-}
-
-const resetTooltipElements = () => {
-  let toolTips = document.querySelectorAll(".tooltip");
-  toolTips.forEach(tooltip => {
-    tooltip.textContent = "Copy";
-  })
+    tooltip.textContent = text;
+  });
 }
 
 // <-- Tab contents -->
 
+/** 
+ * Creating "All" tab colors
+ */
 const createAllTabContent = (colorsByType) => { 
   let colorsByColorCode = joinByColorCode(colorsByType);
   colorsByColorCode.forEach(color => {
@@ -80,6 +98,9 @@ const createAllTabContent = (colorsByType) => {
   createCopyAllListeners();
 }
 
+/** 
+ * Creating grouped tab colors 
+ */
 const createGroupedTabsContents = (colors) => {
   colors.forEach(color => {
     switch(color.type) {
@@ -95,6 +116,9 @@ const createGroupedTabsContents = (colors) => {
   });
 }
 
+/** 
+ * Creating error content when colors can't be fetched
+ */
 const createErrorContent = () => {
   let tabContents = document.querySelectorAll(".panel-content");
   tabContents.forEach(tab => {
@@ -107,6 +131,9 @@ const createErrorContent = () => {
 
 // <-- Copy to clipboard events -->
 
+/** 
+ * Adding event listeners for copy all buttons
+ */
 const createCopyAllListeners = () => {
   let copyAllButtons = document.querySelectorAll(".copy-all-button");
   copyAllButtons.forEach(button => {
@@ -117,6 +144,9 @@ const createCopyAllListeners = () => {
   });
 }
 
+/** 
+ * Reading color codes from current popup tab (for example "All") and copying those on user's clipboard 
+ */
 const copyAllOnClickEvent = () => {
   let colorPillDivs = document.querySelectorAll(".panel-active > .panel-content > .color-row > .tooltippable");
   let colorCodes = [];
@@ -124,18 +154,24 @@ const copyAllOnClickEvent = () => {
     colorCodes.push(colorPill.firstChild.textContent);
   });
   copyToClipboard(colorCodes.toString());
-  updateTooltipElements();
+  updateTooltipTexts("Copied!");
 }
 
+/** 
+ * Reading color code of current color element and copying that on user's clipboard
+ */
 const copyOnClickEvent = (node) => {
   let colorCodeElement = node.target.firstChild;
   let text = colorCodeElement.textContent;
   copyToClipboard(text);
-  updateTooltipElements();
+  updateTooltipTexts("Copied!");
 }
 
 // <-- Element clearing -->
 
+/** 
+ * Removes all the child element of the given array of elements
+ */
 const removeChildrenElements = (elements) => {
   elements.forEach(element => {
     while (element && element.firstChild) {
@@ -144,12 +180,18 @@ const removeChildrenElements = (elements) => {
   })
 }
 
+/** 
+ * Resets the popup so the previous colors are removed
+ */
 const clearPreviousContents = () => {
   removeChildrenElements([allContentDiv, bgContentDiv, textContentDiv, otherContentDiv]);
 }
 
 // <-- Creating tab contents -->
 
+/** 
+ * Creating the color content for each popup's tab
+ */
 const createContents = (colors) => {
   if (colors) {
     createAllTabContent(colors);
@@ -161,10 +203,14 @@ const createContents = (colors) => {
 
 // <-- Initialize -->
 
+/** 
+ * Initialization of the popup window
+ */
 const initializePopup = async () => {
   clearPreviousContents();
   let colors = await getWebsiteColors();
   createContents(colors);
 }
 
+// Runs on load
 initializePopup();

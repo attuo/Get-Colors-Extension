@@ -1,3 +1,5 @@
+/* Classes for popup tabs */
+
 .tabs {
   display: flex;
   justify-content: space-evenly;
