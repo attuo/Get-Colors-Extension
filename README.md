@@ -6,7 +6,7 @@ Get color codes from website easily with this browser extension.
 
 ---
 
-![Demonstration GIF](demo2.gif)
+![Demonstration GIF](demo.gif)
 
 ---
   
