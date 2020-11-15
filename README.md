@@ -4,8 +4,6 @@ Get color codes from website easily with this browser extension.
 
 ## ✨ [Add to Firefox]() (work in progress) 
 
----
-
 ![Demonstration GIF](demo.gif)
 
 ---
