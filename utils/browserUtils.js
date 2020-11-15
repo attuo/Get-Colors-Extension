@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Inserts JavaScript to the browser's current tab page
  *  This loads the scrape.js to the page, that fetches the page's html and css

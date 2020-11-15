@@ -3,9 +3,9 @@
 /* Containers */
 
 .container {
-  width: 320px;
   display: flex;
   flex-direction: column;
+  width: 320px;
   margin: 10px;
 }
 
@@ -16,8 +16,8 @@
 /* Navigation */
 
 .nav {
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
   z-index: -1;
   transform: translateY(3px);
 }
@@ -33,7 +33,6 @@
 .panel {
   display: none;
   height: 380px;
-  border-radius: 5px;
   scrollbar-width: thin;
   padding: 10px;
   border-radius: 5px;
@@ -48,19 +47,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--panel-header-text-color);
   padding: 5px;
   margin-bottom: 5px;
   border-radius: 5px;
-  color: var(--panel-header-text-color);
+  user-select: none;
 }
 
 .panel-content {
   display: flex;
-  height: 100%;
-  overflow-y: auto;
   flex-direction: column;
-  border-radius: 5px;
+  height: 100%;
   color: var(--panel-content-text-color);
+  border-radius: 5px;
+  overflow-y: auto;
   scrollbar-width: thin;
 }
 
