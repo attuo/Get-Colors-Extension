@@ -1,6 +1,6 @@
-# Get-Colors-Extension (Work in progress)
+# GetColors browser extension (Work in progress)
 
-Browser extension for getting website colors easily.
+Get color codes from website easily.
 
 ### ✨ [Demo]()
 
