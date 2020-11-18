@@ -21,12 +21,13 @@ Done
 - [X] Super simple and easy to use
 - [X] All done with HTML/CSS/JS, because why not!
 - [X] No libraries nor any dependencies
+- [X] Published the extension to Firefox
 
 Work in progress
-- [ ] Publish the extension to Firefox
+- [ ] [Cross-platform support](https://github.com/mozilla/webextension-polyfill) for Chromium based browsers
+- [ ] Publish the extension to Chrome
 
 Might add someday
-- [ ] [Cross-platform support](https://github.com/mozilla/webextension-polyfill) for Chromium based
 - [ ] Publish to Chrome and Edge
 - [ ] TypeScript
 - [ ] Grouping colors by HTML elements
