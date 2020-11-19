@@ -2,7 +2,7 @@
 
 Get color codes from website easily with this browser extension.
 
-## ✨ [Add to Firefox]() (work in progress) 
+## ✨ [Add to Firefox](https://addons.mozilla.org/firefox/addon/getcolors/)
 
 ![Demonstration GIF](demo.gif)
 
